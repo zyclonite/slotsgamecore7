@@ -26,7 +26,7 @@ func startWorker3(game sgc7game.IGame, rtp *RTP, spinnums int64, stake *sgc7game
 
 		ps := game.Initialize()
 		results := []*sgc7game.PlayResult{}
-		// gameData := game.NewGameData(stake)
+		gameData := game.NewGameData()
 		// if gameData == nil {
 		// 	goutils.Error("startWorker3:NewGameData",
 		// 		zap.Error(sgc7game.ErrInvalidStake))
@@ -53,7 +53,7 @@ func startWorker3(game sgc7game.IGame, rtp *RTP, spinnums int64, stake *sgc7game
 
 			totalReturn := int64(0)
 			for {
-				pr, err := game.Play(plugin, cmd, cmdparam, ps, stake, results, nil)
+				pr, err := game.Play(plugin, cmd, cmdparam, ps, stake, results, gameData)
 				if err != nil {
 					iserrturn = true
 
@@ -136,10 +136,10 @@ func startWorker3(game sgc7game.IGame, rtp *RTP, spinnums int64, stake *sgc7game
 					currtp.TotalWins += v.CashWin
 					totalReturn += v.CashWin
 
-					currtp.OnResult(stake, i, results, nil)
+					currtp.OnResult(stake, i, results, gameData)
 				}
 
-				currtp.OnResults(results, nil)
+				currtp.OnResults(results, gameData)
 
 				if needVariance {
 					rngs := sgc7plugin.GetRngs(plugin)
